@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import { ArrowRight, Trophy, Users, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+
+  const handleFeatureClick = (path: string) => {
+    navigate(path);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
@@ -19,13 +27,13 @@ const Index = () => {
               Join the community that's transforming local sports.
             </p>
             <div className="mt-10">
-              <Link
-                to="/discover"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-accent hover:bg-accent/90 transition-colors duration-200"
+              <Button
+                onClick={() => navigate('/discover')}
+                className="inline-flex items-center px-6 py-3 text-base font-medium rounded-md text-white bg-accent hover:bg-accent/90 transition-colors duration-200"
               >
                 Explore Tournaments
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -40,27 +48,32 @@ const Index = () => {
                 icon: Trophy,
                 title: "Join Tournaments",
                 description: "Find and participate in local tournaments across various sports.",
+                path: "/discover"
               },
               {
                 icon: Users,
                 title: "Build Your Team",
                 description: "Connect with players and form teams for upcoming events.",
+                path: "/organize"
               },
               {
                 icon: Calendar,
                 title: "Organize Events",
                 description: "Create and manage your own tournaments with powerful tools.",
+                path: "/organize"
               },
             ].map((feature, index) => (
-              <div
+              <Button
                 key={feature.title}
-                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn"
+                variant="ghost"
+                onClick={() => handleFeatureClick(feature.path)}
+                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn h-auto flex flex-col items-start"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <feature.icon className="h-10 w-10 text-accent mb-4" />
                 <h3 className="text-xl font-semibold text-primary mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
+                <p className="text-gray-600 text-left">{feature.description}</p>
+              </Button>
             ))}
           </div>
         </div>
