@@ -1,12 +1,70 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Link } from "react-router-dom";
+import Navigation from "../components/Navigation";
+import { ArrowRight, Trophy, Users, Calendar } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-white">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center animate-fadeIn">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary tracking-tight">
+              Your Local Sports Community
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover tournaments, connect with players, and organize events in your area.
+              Join the community that's transforming local sports.
+            </p>
+            <div className="mt-10">
+              <Link
+                to="/discover"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-accent hover:bg-accent/90 transition-colors duration-200"
+              >
+                Explore Tournaments
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: Trophy,
+                title: "Join Tournaments",
+                description: "Find and participate in local tournaments across various sports.",
+              },
+              {
+                icon: Users,
+                title: "Build Your Team",
+                description: "Connect with players and form teams for upcoming events.",
+              },
+              {
+                icon: Calendar,
+                title: "Organize Events",
+                description: "Create and manage your own tournaments with powerful tools.",
+              },
+            ].map((feature, index) => (
+              <div
+                key={feature.title}
+                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <feature.icon className="h-10 w-10 text-accent mb-4" />
+                <h3 className="text-xl font-semibold text-primary mb-2">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
