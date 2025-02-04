@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { name: "Discover", path: "/discover" },
@@ -27,7 +28,11 @@ const Navigation = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className="text-gray-600 hover:text-accent transition-colors duration-200"
+                className={`transition-colors duration-200 ${
+                  location.pathname === item.path
+                    ? "text-accent font-medium"
+                    : "text-gray-600 hover:text-accent"
+                }`}
               >
                 {item.name}
               </Link>
@@ -53,7 +58,11 @@ const Navigation = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-accent hover:bg-gray-50 transition-colors duration-200"
+                  className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
+                    location.pathname === item.path
+                      ? "text-accent bg-gray-50"
+                      : "text-gray-600 hover:text-accent hover:bg-gray-50"
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
