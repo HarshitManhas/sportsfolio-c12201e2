@@ -80,12 +80,12 @@ const Index = () => {
                   key={feature.title}
                   variant="ghost"
                   onClick={() => handleFeatureClick(feature.path)}
-                  className="bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn h-auto flex flex-col items-start"
+                  className="bg-white/90 backdrop-blur-sm p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn h-full w-full flex flex-col items-start text-left"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <feature.icon className="h-10 w-10 text-accent mb-4" />
-                  <h3 className="text-xl font-semibold text-primary mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-left">{feature.description}</p>
+                  <h3 className="text-xl font-semibold text-primary mb-2 w-full break-words">{feature.title}</h3>
+                  <p className="text-gray-600 w-full break-words">{feature.description}</p>
                 </Button>
               ))}
             </div>
