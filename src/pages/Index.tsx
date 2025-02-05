@@ -7,27 +7,10 @@ import { useNavigate } from "react-router-dom";
 const Index = () => {
   const navigate = useNavigate();
 
-  const handleFeatureClick = (path: string) => {
-    navigate(path);
-  };
-
   return (
-    <div 
-      className="min-h-screen relative"
-      style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1556056504-5c7696c4c28d")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
-    >
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/50" />
-      
-      {/* Content wrapper with relative positioning to appear above overlay */}
-      <div className="relative z-10">
-        <Navigation />
-        
+    <div className="min-h-screen bg-gray-100">
+      <Navigation />
+      <div className="relative">
         {/* Hero Section */}
         <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
@@ -65,33 +48,38 @@ const Index = () => {
                 {
                   icon: Trophy,
                   title: "Join Tournaments",
-                  description: "Find and participate in local\ntournaments across various sports.",
-                  path: "/discover"
+                  description: "Find and participate in\nlocal tournaments across\nvarious sports",
+                  action: () => navigate("/discover")
                 },
                 {
                   icon: Users,
                   title: "Build Your Team",
-                  description: "Connect with players and form teams for upcoming events.",
-                  path: "/organize"
+                  description: "Connect with players\nand form teams for\nupcoming tournaments",
+                  action: () => navigate("/discover")
                 },
                 {
                   icon: Calendar,
                   title: "Organize Events",
-                  description: "Create and manage your own tournaments with powerful tools.",
-                  path: "/organize"
-                },
-              ].map((feature, index) => (
-                <Button
+                  description: "Create and manage your\nown tournaments with\nour easy-to-use tools",
+                  action: () => navigate("/create-tournament")
+                }
+              ].map((feature) => (
+                <div
                   key={feature.title}
-                  variant="ghost"
-                  onClick={() => handleFeatureClick(feature.path)}
-                  className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 animate-fadeIn h-full w-full flex flex-col items-start text-left"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                  onClick={feature.action}
+                  className="relative p-6 bg-card rounded-lg shadow-lg cursor-pointer transform transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <feature.icon className="h-10 w-10 text-accent mb-3" />
-                  <h3 className="text-lg font-semibold text-primary mb-2 w-full break-words">{feature.title}</h3>
-                  <p className="text-sm text-gray-600 w-full break-words leading-relaxed">{feature.description}</p>
-                </Button>
+                  <div className="absolute top-0 right-0 p-4">
+                    <ArrowRight className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <feature.icon className="h-12 w-12 text-accent mb-4" />
+                  <h3 className="text-xl font-semibold mb-2 text-card-foreground">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 whitespace-pre-line">
+                    {feature.description}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
