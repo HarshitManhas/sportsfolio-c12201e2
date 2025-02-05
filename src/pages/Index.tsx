@@ -60,7 +60,7 @@ const Index = () => {
                 {
                   icon: Trophy,
                   title: "Join Tournaments",
-                  description: "Find and participate in local tournaments across various sports.",
+                  description: "Find and participate in local\ntournaments across various sports.",
                   path: "/discover"
                 },
                 {
