@@ -11,9 +11,21 @@ const Index = () => {
     <div className="min-h-screen bg-gray-100">
       <Navigation />
       <div className="relative">
-        {/* Hero Section */}
-        <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
+        {/* Hero Section with Background Image */}
+        <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 z-0"
+            style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1517022812141-23620dba5c23")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              filter: 'brightness(0.5)'
+            }}
+          />
+          
+          <div className="max-w-7xl mx-auto relative z-10">
             <div className="text-center animate-fadeIn">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight">
                 Your Local Sports Community
