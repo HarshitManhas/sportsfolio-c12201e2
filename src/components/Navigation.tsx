@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
@@ -18,7 +19,7 @@ const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <span className="text-xl font-bold text-primary">SportsFolio</span>
+              <span className="text-2xl font-bold text-primary font-racing tracking-wider">SportsFolio</span>
             </Link>
           </div>
 
