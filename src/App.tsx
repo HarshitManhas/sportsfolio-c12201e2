@@ -10,9 +10,9 @@ import NotFound from "./pages/NotFound";
 import CreateTournament from "./pages/CreateTournament";
 import Profile from "./pages/Profile";
 import { useState } from "react";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
-  // Create a client
   const [queryClient] = useState(() => new QueryClient());
 
   return (
@@ -23,8 +23,22 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/create-tournament" element={<CreateTournament />} />
+            <Route
+              path="/discover"
+              element={
+                <ProtectedRoute>
+                  <Discover />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create-tournament"
+              element={
+                <ProtectedRoute>
+                  <CreateTournament />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
