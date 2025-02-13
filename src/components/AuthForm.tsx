@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { toast } from "sonner";
+import { Icons } from "./icons";
 
 type FormData = {
   email: string;
@@ -62,6 +63,23 @@ const AuthForm = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
       <div className="text-center">
@@ -73,6 +91,34 @@ const AuthForm = () => {
             ? "Enter your details to create your account"
             : "Enter your credentials to access your account"}
         </p>
+      </div>
+
+      <div className="grid gap-4">
+        <Button
+          variant="outline"
+          type="button"
+          disabled={isLoading}
+          onClick={handleGoogleSignIn}
+          className="w-full"
+        >
+          {isLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Icons.google className="mr-2 h-4 w-4" />
+          )}{" "}
+          Continue with Google
+        </Button>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
       </div>
 
       <Form {...form}>
@@ -122,11 +168,10 @@ const AuthForm = () => {
           />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading
-              ? "Loading..."
-              : isRegistering
-              ? "Create Account"
-              : "Sign In"}
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            {isRegistering ? "Create Account" : "Sign In"}
           </Button>
         </form>
       </Form>
