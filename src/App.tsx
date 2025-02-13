@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import CreateTournament from "./pages/CreateTournament";
+import Profile from "./pages/Profile";
 import { useState } from "react";
 
 const App = () => {
@@ -23,6 +25,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/create-tournament" element={<CreateTournament />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
