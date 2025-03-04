@@ -1,17 +1,23 @@
 
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Discover", path: "/discover" },
-    { name: "Organize", path: "/organize" },
+    { name: "Create Tournament", path: "/create-tournament" },
     { name: "Profile", path: "/profile" },
   ];
+
+  const handleNavigation = (path: string) => {
+    setIsOpen(false);
+    navigate(path);
+  };
 
   return (
     <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-lg z-50 border-b border-gray-200">
@@ -26,9 +32,9 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.name}
-                to={item.path}
+                onClick={() => handleNavigation(item.path)}
                 className={`transition-colors duration-200 ${
                   location.pathname === item.path
                     ? "text-accent font-medium"
@@ -36,7 +42,7 @@ const Navigation = () => {
                 }`}
               >
                 {item.name}
-              </Link>
+              </button>
             ))}
           </div>
 
@@ -56,18 +62,17 @@ const Navigation = () => {
           <div className="md:hidden animate-fadeIn">
             <div className="pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                <Link
+                <button
                   key={item.name}
-                  to={item.path}
-                  className={`block px-3 py-2 text-base font-medium transition-colors duration-200 ${
+                  onClick={() => handleNavigation(item.path)}
+                  className={`block w-full text-left px-3 py-2 text-base font-medium transition-colors duration-200 ${
                     location.pathname === item.path
                       ? "text-accent bg-gray-50"
                       : "text-gray-600 hover:text-accent hover:bg-gray-50"
                   }`}
-                  onClick={() => setIsOpen(false)}
                 >
                   {item.name}
-                </Link>
+                </button>
               ))}
             </div>
           </div>
