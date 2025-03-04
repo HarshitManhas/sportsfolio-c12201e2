@@ -9,6 +9,7 @@ import Discover from "./pages/Discover";
 import NotFound from "./pages/NotFound";
 import CreateTournament from "./pages/CreateTournament";
 import Profile from "./pages/Profile";
+import TournamentDetails from "./pages/TournamentDetails";
 import { useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -40,6 +41,7 @@ const App = () => {
               }
             />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/tournament/:id" element={<TournamentDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

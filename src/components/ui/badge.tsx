@@ -16,21 +16,60 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        sport: "",
       },
+      sport: {
+        football: "border-transparent bg-green-100 text-green-800 hover:bg-green-200",
+        basketball: "border-transparent bg-orange-100 text-orange-800 hover:bg-orange-200",
+        tennis: "border-transparent bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+        volleyball: "border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200",
+        cricket: "border-transparent bg-purple-100 text-purple-800 hover:bg-purple-200",
+        default: "border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200",
+      }
     },
     defaultVariants: {
       variant: "default",
+      sport: "default",
     },
+    compoundVariants: [
+      {
+        variant: "sport",
+        sport: "football",
+        class: "border-transparent bg-green-100 text-green-800 hover:bg-green-200",
+      },
+      {
+        variant: "sport",
+        sport: "basketball",
+        class: "border-transparent bg-orange-100 text-orange-800 hover:bg-orange-200",
+      },
+      {
+        variant: "sport",
+        sport: "tennis",
+        class: "border-transparent bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
+      },
+      {
+        variant: "sport",
+        sport: "volleyball",
+        class: "border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200",
+      },
+      {
+        variant: "sport",
+        sport: "cricket",
+        class: "border-transparent bg-purple-100 text-purple-800 hover:bg-purple-200",
+      },
+    ],
   }
 )
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+    sport?: "football" | "basketball" | "tennis" | "volleyball" | "cricket" | "default";
+}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, sport, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant, sport }), className)} {...props} />
   )
 }
 
