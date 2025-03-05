@@ -43,7 +43,7 @@ const sampleTournaments: Tournament[] = [
     location: "Tennis Club Courts",
     startDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
     maxParticipants: 32,
-    imageUrl: "https://images.unsplash.com/photo-1595435934819-5704bd65faa11?q=80&w=1470&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=1470&auto=format&fit=crop",
     trending: true
   }
 ];
