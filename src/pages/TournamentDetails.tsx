@@ -17,7 +17,7 @@ const getTournamentDetails = (id: string) => {
     location: "Central Sports Complex, 123 Main St",
     startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     endDate: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000),
-    entryFee: "$25",
+    entryFee: "₹500",
     maxParticipants: 12,
     format: "Knockout",
     description: "Join our exciting summer basketball tournament! Open to all skill levels, with prizes for the winners and runners-up. Event includes refreshments and a networking session after the final match.",

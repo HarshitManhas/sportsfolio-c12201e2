@@ -180,7 +180,7 @@ const TournamentRegistration = ({
             <DialogHeader>
               <DialogTitle>Payment for {tournamentName}</DialogTitle>
               <DialogDescription>
-                Tournament entry fee: <Badge variant="outline">₹{entryFee}</Badge>
+                Tournament entry fee: <Badge variant="outline">{entryFee}</Badge>
               </DialogDescription>
             </DialogHeader>
 
