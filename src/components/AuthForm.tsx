@@ -23,6 +23,7 @@ type FormData = {
 
 const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
 
   const form = useForm<FormData>({
@@ -65,18 +66,19 @@ const AuthForm = () => {
 
   const handleGoogleSignIn = async () => {
     try {
+      setIsGoogleLoading(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
+          redirectTo: `${window.location.origin}/profile`,
         },
       });
       if (error) throw error;
     } catch (error: any) {
       toast.error(error.message);
+      console.error("Google sign-in error:", error);
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -97,11 +99,11 @@ const AuthForm = () => {
         <Button
           variant="outline"
           type="button"
-          disabled={isLoading}
+          disabled={isGoogleLoading}
           onClick={handleGoogleSignIn}
           className="w-full"
         >
-          {isLoading ? (
+          {isGoogleLoading ? (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             <Icons.google className="mr-2 h-4 w-4" />
