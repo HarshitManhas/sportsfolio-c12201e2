@@ -32,4 +32,6 @@ export interface Tournament {
   created_at: string;
   updated_at: string;
   status: string;
+  participants_count?: number;
+  image_url?: string;
 }
