@@ -6,7 +6,10 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
   try {
     const { data, error } = await supabase
       .from('tournaments')
-      .select('*')
+      .select(`
+        *,
+        participants_count:tournament_participants(count)
+      `)
       .eq('visibility', 'public');
       
     if (error) {
@@ -14,7 +17,13 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
       throw error;
     }
 
-    return data as Tournament[] || [];
+    // Process the data to transform the participants_count from an array to a number
+    const processedData = data.map((tournament: any) => ({
+      ...tournament,
+      participants_count: tournament.participants_count?.[0]?.count || 0
+    }));
+
+    return processedData as Tournament[] || [];
   } catch (err) {
     console.error("Unexpected error:", err);
     throw err;
