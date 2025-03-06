@@ -18,6 +18,7 @@ import { TournamentFormData } from "@/types/tournament";
 import { BasicInfoTab } from "@/components/tournament/BasicInfoTab";
 import { DetailsTab } from "@/components/tournament/DetailsTab";
 import { PaymentTab } from "@/components/tournament/PaymentTab";
+import { supabase } from "@/integrations/supabase/client";
 
 const CreateTournament = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const CreateTournament = () => {
   const [endDate, setEndDate] = useState<Date>();
   const [activeTab, setActiveTab] = useState("basic");
   const [hasEntryFee, setHasEntryFee] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<TournamentFormData>({
     defaultValues: {
@@ -40,17 +42,51 @@ const CreateTournament = () => {
     },
   });
 
-  const onSubmit = (data: TournamentFormData) => {
-    const tournamentData = {
-      ...data,
-      startDate,
-      endDate,
-      entryFee: hasEntryFee ? data.entryFee : "0",
-    };
-    
-    console.log("Tournament data:", tournamentData);
-    toast.success("Tournament created successfully!");
-    navigate("/");
+  const onSubmit = async (data: TournamentFormData) => {
+    if (!startDate) {
+      toast.error("Start date is required");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const tournamentData = {
+        title: data.name,
+        sport: data.sport,
+        start_date: startDate.toISOString(),
+        end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
+        location: data.location,
+        skill_level: "All Levels", // Default value
+        max_participants: parseInt(data.maxParticipants),
+        entry_fee: hasEntryFee ? data.entryFee : "0",
+        format: data.format,
+        description: data.description,
+        rules: data.rules,
+        visibility: data.visibility,
+        upi_id: data.upiId || null,
+      };
+
+      const { data: createdTournament, error } = await supabase
+        .from('tournaments')
+        .insert(tournamentData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error creating tournament:", error);
+        toast.error("Failed to create tournament: " + error.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast.success("Tournament created successfully!");
+      navigate("/discover");
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("An unexpected error occurred");
+      setIsSubmitting(false);
+    }
   };
 
   const handleNextTab = () => {
@@ -121,8 +157,12 @@ const CreateTournament = () => {
                   <div></div>
                 )}
                 
-                <Button type="button" onClick={handleNextTab}>
-                  {activeTab === "payment" ? "Create Tournament" : "Next"}
+                <Button 
+                  type="button" 
+                  onClick={handleNextTab}
+                  disabled={isSubmitting}
+                >
+                  {activeTab === "payment" ? (isSubmitting ? "Creating..." : "Create Tournament") : "Next"}
                 </Button>
               </div>
             </form>
