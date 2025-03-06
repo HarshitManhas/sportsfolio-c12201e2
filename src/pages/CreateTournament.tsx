@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { TournamentFormData } from "@/types/tournament";
 import { BasicInfoTab } from "@/components/tournament/BasicInfoTab";
 import { DetailsTab } from "@/components/tournament/DetailsTab";
 import { PaymentTab } from "@/components/tournament/PaymentTab";
-import { supabase } from "@/integrations/supabase/client";
+import { createTournament } from "@/services/tournamentService";
 
 const CreateTournament = () => {
   const navigate = useNavigate();
@@ -72,24 +71,14 @@ const CreateTournament = () => {
         status: "upcoming", // Default status for new tournaments
       };
 
-      const { data: createdTournament, error } = await supabase
-        .from('tournaments')
-        .insert(tournamentData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Error creating tournament:", error);
-        toast.error("Failed to create tournament: " + error.message);
-        setIsSubmitting(false);
-        return;
-      }
-
+      await createTournament(tournamentData);
+      
       toast.success("Tournament created successfully!");
       navigate("/discover");
-    } catch (err) {
+    } catch (err: any) {
       console.error("Unexpected error:", err);
-      toast.error("An unexpected error occurred");
+      toast.error("Failed to create tournament: " + err.message);
+    } finally {
       setIsSubmitting(false);
     }
   };

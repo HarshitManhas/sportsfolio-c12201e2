@@ -229,11 +229,15 @@ export type Database = {
       tournaments: {
         Row: {
           created_at: string | null
+          description: string | null
           end_date: string
+          entry_fee: string | null
+          format: string | null
           id: string
           location: Json
           max_participants: number
           organizer_id: string
+          rules: string | null
           skill_level: string
           sport: string
           start_date: string
@@ -244,11 +248,15 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          description?: string | null
           end_date: string
+          entry_fee?: string | null
+          format?: string | null
           id?: string
           location: Json
           max_participants: number
           organizer_id: string
+          rules?: string | null
           skill_level: string
           sport: string
           start_date: string
@@ -259,11 +267,15 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          description?: string | null
           end_date?: string
+          entry_fee?: string | null
+          format?: string | null
           id?: string
           location?: Json
           max_participants?: number
           organizer_id?: string
+          rules?: string | null
           skill_level?: string
           sport?: string
           start_date?: string

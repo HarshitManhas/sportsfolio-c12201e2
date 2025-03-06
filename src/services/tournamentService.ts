@@ -29,3 +29,23 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
     throw err;
   }
 };
+
+export const createTournament = async (tournamentData: Partial<Tournament>): Promise<Tournament> => {
+  try {
+    const { data, error } = await supabase
+      .from('tournaments')
+      .insert(tournamentData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating tournament:", error);
+      throw error;
+    }
+
+    return data as Tournament;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    throw err;
+  }
+};
