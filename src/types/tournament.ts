@@ -20,7 +20,7 @@ export interface Tournament {
   sport: string;
   start_date: string;
   end_date: string;
-  location: string;
+  location: string | any;
   skill_level: string;
   max_participants: number;
   entry_fee: string;

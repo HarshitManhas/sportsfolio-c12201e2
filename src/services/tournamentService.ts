@@ -14,7 +14,7 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
       throw error;
     }
 
-    return data || [];
+    return data as Tournament[] || [];
   } catch (err) {
     console.error("Unexpected error:", err);
     throw err;

@@ -51,12 +51,16 @@ const CreateTournament = () => {
     setIsSubmitting(true);
 
     try {
+      // Get current user ID (for demonstration, we're using a fixed value)
+      // In a real application, you would get this from the authenticated user
+      const mockOrganizerId = "00000000-0000-0000-0000-000000000000";
+      
       const tournamentData = {
         title: data.name,
         sport: data.sport,
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
-        location: data.location,
+        location: data.location, // String value for location
         skill_level: "All Levels", // Default value
         max_participants: parseInt(data.maxParticipants),
         entry_fee: hasEntryFee ? data.entryFee : "0",
@@ -64,7 +68,8 @@ const CreateTournament = () => {
         description: data.description,
         rules: data.rules,
         visibility: data.visibility,
-        upi_id: data.upiId || null,
+        organizer_id: mockOrganizerId, // Required field by the database
+        status: "upcoming", // Default status for new tournaments
       };
 
       const { data: createdTournament, error } = await supabase
