@@ -40,6 +40,7 @@ const CreateTournament = () => {
       description: "",
       rules: "",
       visibility: "public",
+      skillLevel: "All Levels", // Set a default value
     },
   });
 
@@ -67,7 +68,7 @@ const CreateTournament = () => {
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
         location: data.location, // String value for location
-        skill_level: "All Levels", // Default value
+        skill_level: data.skillLevel || "All Levels", // Use the skill level from the form or a default value
         max_participants: parseInt(data.maxParticipants),
         entry_fee: hasEntryFee ? data.entryFee : "0",
         format: data.format,

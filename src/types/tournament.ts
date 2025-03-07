@@ -12,6 +12,7 @@ export interface TournamentFormData {
   rules: string;
   visibility: string;
   upiId?: string;
+  skillLevel?: string;
 }
 
 export interface Tournament {
