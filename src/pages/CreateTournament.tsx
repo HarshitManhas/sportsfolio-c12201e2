@@ -62,27 +62,45 @@ const CreateTournament = () => {
         return;
       }
       
-      // Make sure skill_level exactly matches one of the allowed values
-      const skillLevel = data.skillLevel || "All Levels";
+      // Ensure we're using EXACTLY one of the valid skill levels
+      let validSkillLevel: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional';
+      
+      // Map the input to ensure it exactly matches one of the allowed values
+      switch(data.skillLevel) {
+        case "All Levels": validSkillLevel = "All Levels"; break;
+        case "Beginner": validSkillLevel = "Beginner"; break;
+        case "Intermediate": validSkillLevel = "Intermediate"; break;
+        case "Advanced": validSkillLevel = "Advanced"; break;
+        case "Professional": validSkillLevel = "Professional"; break;
+        default: validSkillLevel = "All Levels"; // Fallback to safe default
+      }
+      
+      console.log("Submitting tournament with mapped skill level:", validSkillLevel);
+      
+      // Ensure maxParticipants is a valid number
+      const maxParticipants = parseInt(data.maxParticipants);
+      if (isNaN(maxParticipants)) {
+        toast.error("Maximum participants must be a valid number");
+        setIsSubmitting(false);
+        return;
+      }
       
       const tournamentData = {
         title: data.name,
         sport: data.sport,
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
-        location: data.location, // String value for location
-        skill_level: skillLevel as 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional', 
-        max_participants: parseInt(data.maxParticipants),
+        location: data.location,
+        skill_level: validSkillLevel,
+        max_participants: maxParticipants,
         entry_fee: hasEntryFee ? data.entryFee : "0",
         format: data.format,
         description: data.description,
         rules: data.rules,
         visibility: data.visibility,
-        organizer_id: sessionData.session.user.id, // Use the authenticated user's ID
-        status: "upcoming", // Default status for new tournaments
+        organizer_id: sessionData.session.user.id,
+        status: "upcoming",
       };
-
-      console.log("Submitting tournament with skill level:", skillLevel);
       
       await createTournament(tournamentData);
       

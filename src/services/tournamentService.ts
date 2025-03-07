@@ -59,9 +59,11 @@ export const createTournament = async (tournamentData: CreateTournamentData): Pr
       throw new Error("You must be logged in to create a tournament");
     }
     
-    // Ensure skill_level is one of the allowed values
-    if (!['All Levels', 'Beginner', 'Intermediate', 'Advanced', 'Professional'].includes(tournamentData.skill_level)) {
-      throw new Error("Invalid skill level. Must be one of: All Levels, Beginner, Intermediate, Advanced, Professional");
+    // Double-check that skill_level is exactly one of the allowed values
+    const validSkillLevels = ['All Levels', 'Beginner', 'Intermediate', 'Advanced', 'Professional'];
+    if (!validSkillLevels.includes(tournamentData.skill_level)) {
+      console.error("Invalid skill level:", tournamentData.skill_level);
+      throw new Error(`Invalid skill level. Must be one of: ${validSkillLevels.join(', ')}`);
     }
     
     // Use the current user's ID as the organizer_id
