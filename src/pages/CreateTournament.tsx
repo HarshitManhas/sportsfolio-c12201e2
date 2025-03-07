@@ -40,7 +40,7 @@ const CreateTournament = () => {
       description: "",
       rules: "",
       visibility: "public",
-      skillLevel: "All Levels", // Set a default value
+      skillLevel: "All Levels", // Default value that matches the constraint
     },
   });
 
@@ -62,13 +62,16 @@ const CreateTournament = () => {
         return;
       }
       
+      // Make sure skill_level exactly matches one of the allowed values
+      const skillLevel = data.skillLevel || "All Levels";
+      
       const tournamentData = {
         title: data.name,
         sport: data.sport,
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
         location: data.location, // String value for location
-        skill_level: data.skillLevel || "All Levels", // Use the skill level from the form or a default value
+        skill_level: skillLevel as 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional', 
         max_participants: parseInt(data.maxParticipants),
         entry_fee: hasEntryFee ? data.entryFee : "0",
         format: data.format,
@@ -79,6 +82,8 @@ const CreateTournament = () => {
         status: "upcoming", // Default status for new tournaments
       };
 
+      console.log("Submitting tournament with skill level:", skillLevel);
+      
       await createTournament(tournamentData);
       
       toast.success("Tournament created successfully!");

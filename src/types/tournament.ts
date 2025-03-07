@@ -12,7 +12,7 @@ export interface TournamentFormData {
   rules: string;
   visibility: string;
   upiId?: string;
-  skillLevel?: string;
+  skillLevel: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional';
 }
 
 export interface Tournament {

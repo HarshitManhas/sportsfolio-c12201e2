@@ -37,7 +37,7 @@ interface CreateTournamentData {
   start_date: string;
   end_date: string;
   location: any; // Using 'any' for the JSON field
-  skill_level: string;
+  skill_level: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional'; // Strict type to match constraint
   max_participants: number;
   organizer_id: string;
   status: string;
@@ -57,6 +57,11 @@ export const createTournament = async (tournamentData: CreateTournamentData): Pr
     if (sessionError || !sessionData.session) {
       console.error("Authentication error:", sessionError?.message || "User not authenticated");
       throw new Error("You must be logged in to create a tournament");
+    }
+    
+    // Ensure skill_level is one of the allowed values
+    if (!['All Levels', 'Beginner', 'Intermediate', 'Advanced', 'Professional'].includes(tournamentData.skill_level)) {
+      throw new Error("Invalid skill level. Must be one of: All Levels, Beginner, Intermediate, Advanced, Professional");
     }
     
     // Use the current user's ID as the organizer_id
