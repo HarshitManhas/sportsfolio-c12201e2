@@ -40,7 +40,6 @@ const CreateTournament = () => {
       description: "",
       rules: "",
       visibility: "public",
-      skillLevel: "All Levels", // Default value that matches the constraint
     },
   });
 
@@ -62,21 +61,6 @@ const CreateTournament = () => {
         return;
       }
       
-      // Ensure we're using EXACTLY one of the valid skill levels
-      let validSkillLevel: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional';
-      
-      // Map the input to ensure it exactly matches one of the allowed values
-      switch(data.skillLevel) {
-        case "All Levels": validSkillLevel = "All Levels"; break;
-        case "Beginner": validSkillLevel = "Beginner"; break;
-        case "Intermediate": validSkillLevel = "Intermediate"; break;
-        case "Advanced": validSkillLevel = "Advanced"; break;
-        case "Professional": validSkillLevel = "Professional"; break;
-        default: validSkillLevel = "All Levels"; // Fallback to safe default
-      }
-      
-      console.log("Submitting tournament with mapped skill level:", validSkillLevel);
-      
       // Ensure maxParticipants is a valid number
       const maxParticipants = parseInt(data.maxParticipants);
       if (isNaN(maxParticipants)) {
@@ -91,7 +75,6 @@ const CreateTournament = () => {
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
         location: data.location,
-        skill_level: validSkillLevel,
         max_participants: maxParticipants,
         entry_fee: hasEntryFee ? data.entryFee : "0",
         format: data.format,

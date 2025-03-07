@@ -16,8 +16,6 @@ interface TournamentFiltersProps {
   setSearchTerm: (value: string) => void;
   sportFilter: string;
   setSportFilter: (value: string) => void;
-  skillFilter: string;
-  setSkillFilter: (value: string) => void;
 }
 
 const TournamentFilters = ({
@@ -25,8 +23,6 @@ const TournamentFilters = ({
   setSearchTerm,
   sportFilter,
   setSportFilter,
-  skillFilter,
-  setSkillFilter,
 }: TournamentFiltersProps) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -53,19 +49,6 @@ const TournamentFilters = ({
             <SelectItem value="football">Football</SelectItem>
             <SelectItem value="volleyball">Volleyball</SelectItem>
             <SelectItem value="cricket">Cricket</SelectItem>
-          </SelectContent>
-        </Select>
-        
-        <Select value={skillFilter} onValueChange={setSkillFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Skill Level" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Levels</SelectItem>
-            <SelectItem value="Beginner">Beginner</SelectItem>
-            <SelectItem value="Intermediate">Intermediate</SelectItem>
-            <SelectItem value="Advanced">Advanced</SelectItem>
-            <SelectItem value="All Levels">Mixed Levels</SelectItem>
           </SelectContent>
         </Select>
         

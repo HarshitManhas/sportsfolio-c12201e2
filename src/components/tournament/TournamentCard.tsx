@@ -60,12 +60,9 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
           
           <div className="flex items-start">
             <DollarSign className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-muted-foreground" />
-            <div className="flex flex-col">
+            <div>
               <p className="text-sm text-muted-foreground">
                 Entry Fee: ₹{tournament.entry_fee || 0}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Skill Level: {tournament.skill_level}
               </p>
             </div>
           </div>

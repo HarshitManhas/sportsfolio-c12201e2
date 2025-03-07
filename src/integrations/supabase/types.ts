@@ -238,7 +238,6 @@ export type Database = {
           max_participants: number
           organizer_id: string
           rules: string | null
-          skill_level: string
           sport: string
           start_date: string
           status: string
@@ -257,7 +256,6 @@ export type Database = {
           max_participants: number
           organizer_id: string
           rules?: string | null
-          skill_level: string
           sport: string
           start_date: string
           status?: string
@@ -276,7 +274,6 @@ export type Database = {
           max_participants?: number
           organizer_id?: string
           rules?: string | null
-          skill_level?: string
           sport?: string
           start_date?: string
           status?: string

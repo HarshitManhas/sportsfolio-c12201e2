@@ -14,7 +14,6 @@ const Discover = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [sportFilter, setSportFilter] = useState("all");
-  const [skillFilter, setSkillFilter] = useState("all");
 
   useEffect(() => {
     const loadTournaments = async () => {
@@ -41,10 +40,7 @@ const Discover = () => {
     // Filter by sport
     const matchesSport = sportFilter === 'all' || tournament.sport === sportFilter;
     
-    // Filter by skill level
-    const matchesSkill = skillFilter === 'all' || tournament.skill_level === skillFilter;
-    
-    return matchesSearch && matchesSport && matchesSkill;
+    return matchesSearch && matchesSport;
   });
 
   return (
@@ -67,8 +63,6 @@ const Discover = () => {
             setSearchTerm={setSearchTerm}
             sportFilter={sportFilter}
             setSportFilter={setSportFilter}
-            skillFilter={skillFilter}
-            setSkillFilter={setSkillFilter}
           />
 
           <TournamentsList 

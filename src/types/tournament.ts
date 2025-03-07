@@ -12,7 +12,6 @@ export interface TournamentFormData {
   rules: string;
   visibility: string;
   upiId?: string;
-  skillLevel: 'All Levels' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Professional';
 }
 
 export interface Tournament {
@@ -22,7 +21,6 @@ export interface Tournament {
   start_date: string;
   end_date: string;
   location: string | any;
-  skill_level: string;
   max_participants: number;
   entry_fee: string;
   format: string;

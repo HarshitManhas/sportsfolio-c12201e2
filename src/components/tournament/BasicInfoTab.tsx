@@ -103,34 +103,6 @@ export const BasicInfoTab = ({
 
       <FormField
         control={control}
-        name="skillLevel"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Skill Level</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value || "All Levels"}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select skill level" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectItem value="All Levels">All Levels</SelectItem>
-                <SelectItem value="Beginner">Beginner</SelectItem>
-                <SelectItem value="Intermediate">Intermediate</SelectItem>
-                <SelectItem value="Advanced">Advanced</SelectItem>
-                <SelectItem value="Professional">Professional</SelectItem>
-              </SelectContent>
-            </Select>
-            <FormDescription>
-              The skill level required for participants.
-            </FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={control}
         name="visibility"
         render={({ field }) => (
           <FormItem>
