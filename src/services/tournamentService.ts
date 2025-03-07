@@ -30,7 +30,26 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
   }
 };
 
-export const createTournament = async (tournamentData: Partial<Tournament>): Promise<Tournament> => {
+// Define a more specific type for tournament creation that matches the required fields in the database
+interface CreateTournamentData {
+  title: string;
+  sport: string;
+  start_date: string;
+  end_date: string;
+  location: any; // Using 'any' for the JSON field
+  skill_level: string;
+  max_participants: number;
+  organizer_id: string;
+  status: string;
+  // Optional fields
+  entry_fee?: string;
+  format?: string;
+  description?: string;
+  rules?: string;
+  visibility?: string;
+}
+
+export const createTournament = async (tournamentData: CreateTournamentData): Promise<Tournament> => {
   try {
     const { data, error } = await supabase
       .from('tournaments')
