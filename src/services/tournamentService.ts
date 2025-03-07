@@ -51,9 +51,26 @@ interface CreateTournamentData {
 
 export const createTournament = async (tournamentData: CreateTournamentData): Promise<Tournament> => {
   try {
+    // Check if the user is authenticated
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !sessionData.session) {
+      console.error("Authentication error:", sessionError?.message || "User not authenticated");
+      throw new Error("You must be logged in to create a tournament");
+    }
+    
+    // Use the current user's ID as the organizer_id
+    const userId = sessionData.session.user.id;
+    const tournamentWithUserId = {
+      ...tournamentData,
+      organizer_id: userId
+    };
+    
+    console.log("Creating tournament with data:", tournamentWithUserId);
+    
     const { data, error } = await supabase
       .from('tournaments')
-      .insert(tournamentData)
+      .insert(tournamentWithUserId)
       .select()
       .single();
 

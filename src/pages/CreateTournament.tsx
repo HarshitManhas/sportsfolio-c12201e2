@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { BasicInfoTab } from "@/components/tournament/BasicInfoTab";
 import { DetailsTab } from "@/components/tournament/DetailsTab";
 import { PaymentTab } from "@/components/tournament/PaymentTab";
 import { createTournament } from "@/services/tournamentService";
+import { supabase } from "@/integrations/supabase/client";
 
 const CreateTournament = () => {
   const navigate = useNavigate();
@@ -50,9 +52,14 @@ const CreateTournament = () => {
     setIsSubmitting(true);
 
     try {
-      // Get current user ID (for demonstration, we're using a fixed value)
-      // In a real application, you would get this from the authenticated user
-      const mockOrganizerId = "00000000-0000-0000-0000-000000000000";
+      // First check if user is authenticated
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        toast.error("You must be logged in to create a tournament");
+        navigate("/profile");
+        return;
+      }
       
       const tournamentData = {
         title: data.name,
@@ -67,7 +74,7 @@ const CreateTournament = () => {
         description: data.description,
         rules: data.rules,
         visibility: data.visibility,
-        organizer_id: mockOrganizerId, // Required field by the database
+        organizer_id: sessionData.session.user.id, // Use the authenticated user's ID
         status: "upcoming", // Default status for new tournaments
       };
 
