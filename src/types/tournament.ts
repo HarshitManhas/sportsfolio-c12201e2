@@ -28,9 +28,13 @@ export interface Tournament {
   rules: string;
   visibility: string;
   organizer_id: string;
+  organizer_name?: string;
   created_at: string;
   updated_at: string;
   status: string;
   participants_count?: number;
   image_url?: string;
+  profiles?: {
+    name: string;
+  };
 }

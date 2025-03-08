@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import { Badge } from "@/components/ui/badge";
@@ -7,32 +8,38 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TournamentRegistration from "../components/TournamentRegistration";
 import { CalendarDays, MapPin, Clock, Users, Trophy, Clipboard, CreditCard, Share2 } from "lucide-react";
-
-// In a real app, this would come from an API
-const getTournamentDetails = (id: string) => {
-  return {
-    id,
-    name: "Summer Basketball Championship",
-    sport: "basketball",
-    location: "Central Sports Complex, 123 Main St",
-    startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    endDate: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000),
-    entryFee: "₹500",
-    maxParticipants: 12,
-    format: "Knockout",
-    description: "Join our exciting summer basketball tournament! Open to all skill levels, with prizes for the winners and runners-up. Event includes refreshments and a networking session after the final match.",
-    rules: "1. Teams must have 5-7 players\n2. Games are 20 minutes each\n3. Tournament rules follow standard basketball regulations\n4. Fair play is expected from all participants",
-    organizer: "City Sports Association",
-    imageUrl: "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1700&auto=format&fit=crop",
-    registered: false
-  };
-};
+import { Tournament } from "@/types/tournament";
+import { fetchTournamentById } from "@/services/tournamentService";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TournamentDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const tournament = getTournamentDetails(id || "1");
+  const [tournament, setTournament] = useState<Tournament | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const formatDate = (date: Date) => {
+  useEffect(() => {
+    const loadTournament = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        const data = await fetchTournamentById(id);
+        setTournament(data);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to fetch tournament:", err);
+        setError("Failed to load tournament details. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTournament();
+  }, [id]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', { 
       month: 'short', 
       day: 'numeric',
@@ -43,8 +50,8 @@ const TournamentDetails = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: tournament.name,
-        text: `Check out this tournament: ${tournament.name}`,
+        title: tournament?.title || "Tournament Details",
+        text: `Check out this tournament: ${tournament?.title || ""}`,
         url: window.location.href,
       });
     } else {
@@ -54,6 +61,48 @@ const TournamentDetails = () => {
     }
   };
 
+  // Handle loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="pt-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <Skeleton className="h-64 w-full mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <Skeleton className="h-96 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-64 w-full mb-4" />
+                <Skeleton className="h-32 w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle error state
+  if (error || !tournament) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="pt-24 px-4 text-center">
+          <h1 className="text-2xl font-bold text-red-500 mb-2">Error</h1>
+          <p className="text-gray-700">{error || "Tournament not found"}</p>
+          <Button className="mt-4" onClick={() => window.history.back()}>Go Back</Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Get location display string
+  const locationDisplay = typeof tournament.location === 'string' 
+    ? tournament.location 
+    : tournament.location?.address || 'Location not specified';
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -62,8 +111,8 @@ const TournamentDetails = () => {
         {/* Tournament header with image */}
         <div className="relative h-64 w-full">
           <img 
-            src={tournament.imageUrl} 
-            alt={tournament.name} 
+            src={tournament.image_url || "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1470&auto=format&fit=crop"} 
+            alt={tournament.title} 
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -75,9 +124,9 @@ const TournamentDetails = () => {
             >
               {tournament.sport}
             </Badge>
-            <h1 className="text-3xl font-bold">{tournament.name}</h1>
+            <h1 className="text-3xl font-bold">{tournament.title}</h1>
             <p className="flex items-center mt-1">
-              <MapPin className="h-4 w-4 mr-1" /> {tournament.location}
+              <MapPin className="h-4 w-4 mr-1" /> {locationDisplay}
             </p>
           </div>
           <Button 
@@ -105,7 +154,7 @@ const TournamentDetails = () => {
                   <Card>
                     <CardContent className="p-6">
                       <h2 className="text-xl font-semibold mb-4">Tournament Details</h2>
-                      <p className="text-gray-700 mb-6">{tournament.description}</p>
+                      <p className="text-gray-700 mb-6">{tournament.description || "No description provided."}</p>
                       
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex items-start">
@@ -114,7 +163,7 @@ const TournamentDetails = () => {
                           </div>
                           <div>
                             <p className="text-sm font-medium">Format</p>
-                            <p className="text-sm text-muted-foreground">{tournament.format}</p>
+                            <p className="text-sm text-muted-foreground">{tournament.format || "Not specified"}</p>
                           </div>
                         </div>
                         
@@ -124,7 +173,9 @@ const TournamentDetails = () => {
                           </div>
                           <div>
                             <p className="text-sm font-medium">Entry Fee</p>
-                            <p className="text-sm text-muted-foreground">{tournament.entryFee}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {tournament.entry_fee ? `₹${tournament.entry_fee}` : "Free"}
+                            </p>
                           </div>
                         </div>
                         
@@ -134,7 +185,7 @@ const TournamentDetails = () => {
                           </div>
                           <div>
                             <p className="text-sm font-medium">Maximum Participants</p>
-                            <p className="text-sm text-muted-foreground">{tournament.maxParticipants}</p>
+                            <p className="text-sm text-muted-foreground">{tournament.max_participants}</p>
                           </div>
                         </div>
                         
@@ -145,7 +196,7 @@ const TournamentDetails = () => {
                           <div>
                             <p className="text-sm font-medium">Dates</p>
                             <p className="text-sm text-muted-foreground">
-                              {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
+                              {formatDate(tournament.start_date)} - {formatDate(tournament.end_date)}
                             </p>
                           </div>
                         </div>
@@ -162,7 +213,7 @@ const TournamentDetails = () => {
                         <h2 className="text-xl font-semibold">Tournament Rules</h2>
                       </div>
                       <div className="whitespace-pre-line">
-                        {tournament.rules}
+                        {tournament.rules || "No rules have been specified for this tournament."}
                       </div>
                     </CardContent>
                   </Card>
@@ -177,7 +228,9 @@ const TournamentDetails = () => {
                       </div>
                       <div className="text-center py-8">
                         <p className="text-muted-foreground">
-                          Registration is open. Be the first to join!
+                          {tournament.participants_count > 0 
+                            ? `${tournament.participants_count} participants registered so far.`
+                            : 'Registration is open. Be the first to join!'}
                         </p>
                       </div>
                     </CardContent>
@@ -197,7 +250,7 @@ const TournamentDetails = () => {
                       <CalendarDays className="h-5 w-5 mr-3 text-muted-foreground" />
                       <div>
                         <p className="text-sm">Start Date</p>
-                        <p className="font-medium">{formatDate(tournament.startDate)}</p>
+                        <p className="font-medium">{formatDate(tournament.start_date)}</p>
                       </div>
                     </div>
                     
@@ -205,7 +258,11 @@ const TournamentDetails = () => {
                       <Clock className="h-5 w-5 mr-3 text-muted-foreground" />
                       <div>
                         <p className="text-sm">Registration Deadline</p>
-                        <p className="font-medium">{formatDate(new Date(tournament.startDate.getTime() - 2 * 24 * 60 * 60 * 1000))}</p>
+                        <p className="font-medium">
+                          {formatDate(new Date(
+                            new Date(tournament.start_date).getTime() - 2 * 24 * 60 * 60 * 1000
+                          ).toISOString())}
+                        </p>
                       </div>
                     </div>
                     
@@ -213,7 +270,7 @@ const TournamentDetails = () => {
                       <MapPin className="h-5 w-5 mr-3 text-muted-foreground" />
                       <div>
                         <p className="text-sm">Location</p>
-                        <p className="font-medium">{tournament.location}</p>
+                        <p className="font-medium">{locationDisplay}</p>
                       </div>
                     </div>
                     
@@ -221,21 +278,17 @@ const TournamentDetails = () => {
                       <Users className="h-5 w-5 mr-3 text-muted-foreground" />
                       <div>
                         <p className="text-sm">Organizer</p>
-                        <p className="font-medium">{tournament.organizer}</p>
+                        <p className="font-medium">{tournament.organizer_name || "Tournament Organizer"}</p>
                       </div>
                     </div>
                   </div>
                   
                   <div className="mt-6">
-                    {tournament.registered ? (
-                      <Button variant="outline" className="w-full">Already Registered</Button>
-                    ) : (
-                      <TournamentRegistration 
-                        tournamentId={tournament.id} 
-                        tournamentName={tournament.name} 
-                        entryFee={tournament.entryFee}
-                      />
-                    )}
+                    <TournamentRegistration 
+                      tournamentId={tournament.id} 
+                      tournamentName={tournament.title} 
+                      entryFee={tournament.entry_fee || "0"}
+                    />
                   </div>
                 </CardContent>
               </Card>

@@ -30,6 +30,38 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
   }
 };
 
+// Fetch a single tournament by its ID
+export const fetchTournamentById = async (id: string): Promise<Tournament> => {
+  try {
+    const { data, error } = await supabase
+      .from('tournaments')
+      .select(`
+        *,
+        participants_count:tournament_participants(count),
+        profiles(name)
+      `)
+      .eq('id', id)
+      .single();
+      
+    if (error) {
+      console.error("Error fetching tournament:", error);
+      throw error;
+    }
+
+    // Process the data to transform the participants_count from an array to a number
+    const processedData = {
+      ...data,
+      participants_count: data.participants_count?.[0]?.count || 0,
+      organizer_name: data.profiles?.name || 'Unknown Organizer'
+    };
+
+    return processedData as Tournament;
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    throw err;
+  }
+};
+
 // Define a more specific type for tournament creation that matches the required fields in the database
 interface CreateTournamentData {
   title: string;
