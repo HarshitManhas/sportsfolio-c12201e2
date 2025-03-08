@@ -33,12 +33,13 @@ export const fetchTournaments = async (): Promise<Tournament[]> => {
 // Fetch a single tournament by its ID
 export const fetchTournamentById = async (id: string): Promise<Tournament> => {
   try {
+    // Update the query to specify the exact relationship with profiles using !tournaments_organizer_id_fkey
     const { data, error } = await supabase
       .from('tournaments')
       .select(`
         *,
         participants_count:tournament_participants(count),
-        profiles(name)
+        profiles!tournaments_organizer_id_fkey(name)
       `)
       .eq('id', id)
       .single();
