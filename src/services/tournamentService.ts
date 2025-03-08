@@ -60,6 +60,33 @@ export const createTournament = async (tournamentData: CreateTournamentData): Pr
     
     // Use the current user's ID as the organizer_id
     const userId = sessionData.session.user.id;
+    
+    // Check if the user profile exists
+    const { data: profileData, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single();
+    
+    if (profileError || !profileData) {
+      console.error("Profile error:", profileError?.message || "User profile not found");
+      
+      // If profile doesn't exist, create one
+      const user = sessionData.session.user;
+      const { error: insertError } = await supabase
+        .from('profiles')
+        .insert({
+          id: userId,
+          email: user.email || '',
+          name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+        });
+      
+      if (insertError) {
+        console.error("Error creating profile:", insertError);
+        throw new Error("Failed to create user profile");
+      }
+    }
+    
     const tournamentWithUserId = {
       ...tournamentData,
       organizer_id: userId

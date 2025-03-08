@@ -74,7 +74,8 @@ const CreateTournament = () => {
         sport: data.sport,
         start_date: startDate.toISOString(),
         end_date: endDate ? endDate.toISOString() : startDate.toISOString(),
-        location: data.location,
+        // Format location as a JSON object to match the database structure
+        location: { address: data.location },
         max_participants: maxParticipants,
         entry_fee: hasEntryFee ? data.entryFee : "0",
         format: data.format,
