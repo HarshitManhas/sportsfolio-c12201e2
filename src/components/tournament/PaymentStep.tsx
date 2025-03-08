@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DialogFooter,
@@ -37,11 +38,20 @@ export const PaymentStep = ({
   onSubmit,
   onBack,
 }: PaymentStepProps) => {
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
   const form = useForm<PaymentFormData>({
     defaultValues: {
       transactionId: "",
     },
   });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue("screenshot", file);
+      setSelectedFileName(file.name);
+    }
+  };
 
   return (
     <>
@@ -82,17 +92,15 @@ export const PaymentStep = ({
           <div className="border-dashed border-2 rounded-md p-6 text-center">
             <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground mb-1">Upload payment screenshot</p>
+            {selectedFileName && (
+              <p className="text-xs text-primary mb-2">Selected: {selectedFileName}</p>
+            )}
             <Input 
               type="file" 
               className="hidden" 
               id="paymentScreenshot" 
               accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  form.setValue("screenshot", file);
-                }
-              }} 
+              onChange={handleFileChange}
             />
             <Button
               type="button"

@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -10,13 +11,25 @@ interface PaymentTabProps {
   control: Control<any>;
   hasEntryFee: boolean;
   setHasEntryFee: (value: boolean) => void;
+  setQrCodeFile: (file: File | null) => void;
 }
 
 export const PaymentTab = ({
   control,
   hasEntryFee,
   setHasEntryFee,
+  setQrCodeFile,
 }: PaymentTabProps) => {
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setQrCodeFile(file);
+      setSelectedFileName(file.name);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -81,11 +94,15 @@ export const PaymentTab = ({
           <div className="border-dashed border-2 rounded-md p-6 text-center">
             <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
             <p className="text-sm text-muted-foreground mb-1">Upload QR code for payments</p>
+            {selectedFileName && (
+              <p className="text-xs text-primary mb-2">Selected: {selectedFileName}</p>
+            )}
             <Input 
               type="file" 
               className="hidden" 
               id="qrCode" 
               accept="image/*"
+              onChange={handleFileChange}
             />
             <Button
               type="button"

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RegistrationStep, RegistrationFormData } from "./tournament/RegistrationStep";
 import { PaymentStep, PaymentFormData } from "./tournament/PaymentStep";
 import { ConfirmationStep } from "./tournament/ConfirmationStep";
+import { registerForTournament } from "@/services/tournamentService";
 
 interface TournamentRegistrationProps {
   tournamentId: string;
@@ -27,6 +28,7 @@ const TournamentRegistration = ({
   const [step, setStep] = useState<Step>("registration");
   const [open, setOpen] = useState(false);
   const [registrationData, setRegistrationData] = useState<RegistrationFormData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleRegistrationSubmit = (data: RegistrationFormData) => {
     console.log("Registration data:", data);
@@ -34,18 +36,48 @@ const TournamentRegistration = ({
     // In a real app, this would validate and store the registration info
     toast.success("Registration information submitted!");
     
-    if (entryFee !== "Free") {
+    if (entryFee !== "Free" && parseInt(entryFee) > 0) {
       setStep("payment");
     } else {
-      setStep("confirmation");
+      handleFreeRegistration(data);
     }
   };
 
-  const handlePaymentSubmit = (data: PaymentFormData) => {
-    console.log("Payment data:", data);
-    // In a real app, this would submit the payment proof for verification
-    toast.success("Payment details submitted for verification!");
-    setStep("confirmation");
+  const handleFreeRegistration = async (data: RegistrationFormData) => {
+    setIsSubmitting(true);
+    
+    try {
+      await registerForTournament(tournamentId, data);
+      setStep("confirmation");
+    } catch (error: any) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePaymentSubmit = async (data: PaymentFormData) => {
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Payment data:", data);
+      if (registrationData) {
+        const combinedData = {
+          ...registrationData,
+          paymentDetails: {
+            transactionId: data.transactionId
+          }
+        };
+        
+        await registerForTournament(tournamentId, combinedData, data.screenshot);
+        toast.success("Payment details submitted for verification!");
+        setStep("confirmation");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Payment submission failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
@@ -83,7 +115,7 @@ const TournamentRegistration = ({
         {step === "confirmation" && (
           <ConfirmationStep 
             tournamentName={tournamentName} 
-            isPaid={entryFee !== "Free"} 
+            isPaid={entryFee !== "Free" && parseInt(entryFee) > 0} 
             onDone={handleDone} 
           />
         )}

@@ -28,6 +28,7 @@ const CreateTournament = () => {
   const [activeTab, setActiveTab] = useState("basic");
   const [hasEntryFee, setHasEntryFee] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [qrCodeFile, setQrCodeFile] = useState<File | null>(null);
 
   const form = useForm<TournamentFormData>({
     defaultValues: {
@@ -40,6 +41,7 @@ const CreateTournament = () => {
       description: "",
       rules: "",
       visibility: "public",
+      upiId: "",
     },
   });
 
@@ -84,9 +86,10 @@ const CreateTournament = () => {
         visibility: data.visibility,
         organizer_id: sessionData.session.user.id,
         status: "upcoming",
+        payment_upi_id: hasEntryFee ? data.upiId : undefined
       };
       
-      await createTournament(tournamentData);
+      await createTournament(tournamentData, qrCodeFile || undefined);
       
       toast.success("Tournament created successfully!");
       navigate("/discover");
@@ -153,6 +156,7 @@ const CreateTournament = () => {
                     control={form.control}
                     hasEntryFee={hasEntryFee}
                     setHasEntryFee={setHasEntryFee}
+                    setQrCodeFile={setQrCodeFile}
                   />
                 </TabsContent>
               </Tabs>

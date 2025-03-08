@@ -79,9 +79,39 @@ interface CreateTournamentData {
   description?: string;
   rules?: string;
   visibility?: string;
+  payment_qr_code?: string; // URL for payment QR code
+  payment_upi_id?: string; // UPI ID for payment
 }
 
-export const createTournament = async (tournamentData: CreateTournamentData): Promise<Tournament> => {
+// Upload a file to Supabase storage
+export const uploadFile = async (file: File, folder: string): Promise<string> => {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const filePath = `${folder}/${fileName}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('tournament_images')
+      .upload(filePath, file);
+    
+    if (uploadError) {
+      console.error("Error uploading file:", uploadError);
+      throw uploadError;
+    }
+    
+    // Get the public URL for the uploaded file
+    const { data } = supabase.storage
+      .from('tournament_images')
+      .getPublicUrl(filePath);
+    
+    return data.publicUrl;
+  } catch (err) {
+    console.error("Error in file upload:", err);
+    throw err;
+  }
+};
+
+export const createTournament = async (tournamentData: CreateTournamentData, qrCodeFile?: File): Promise<Tournament> => {
   try {
     // Check if the user is authenticated
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -120,9 +150,16 @@ export const createTournament = async (tournamentData: CreateTournamentData): Pr
       }
     }
     
+    // Upload QR code if provided
+    let qrCodeUrl = undefined;
+    if (qrCodeFile) {
+      qrCodeUrl = await uploadFile(qrCodeFile, 'qr_codes');
+    }
+    
     const tournamentWithUserId = {
       ...tournamentData,
-      organizer_id: userId
+      organizer_id: userId,
+      payment_qr_code: qrCodeUrl
     };
     
     console.log("Creating tournament with data:", tournamentWithUserId);
@@ -141,6 +178,52 @@ export const createTournament = async (tournamentData: CreateTournamentData): Pr
     return data as Tournament;
   } catch (err) {
     console.error("Unexpected error:", err);
+    throw err;
+  }
+};
+
+// Register for a tournament 
+export const registerForTournament = async (
+  tournamentId: string, 
+  registrationData: any, 
+  paymentScreenshot?: File
+): Promise<any> => {
+  try {
+    // Check if the user is authenticated
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !sessionData.session) {
+      throw new Error("You must be logged in to register for a tournament");
+    }
+    
+    const userId = sessionData.session.user.id;
+    
+    // Upload payment screenshot if provided
+    let paymentScreenshotUrl = undefined;
+    if (paymentScreenshot) {
+      paymentScreenshotUrl = await uploadFile(paymentScreenshot, 'payment_screenshots');
+    }
+    
+    // Add user to tournament participants
+    const { error: participantError } = await supabase
+      .from('tournament_participants')
+      .insert({
+        profile_id: userId,
+        tournament_id: tournamentId,
+        payment_details: {
+          ...registrationData,
+          payment_screenshot_url: paymentScreenshotUrl
+        }
+      });
+      
+    if (participantError) {
+      console.error("Error registering for tournament:", participantError);
+      throw participantError;
+    }
+    
+    return { success: true };
+  } catch (err) {
+    console.error("Error registering for tournament:", err);
     throw err;
   }
 };
