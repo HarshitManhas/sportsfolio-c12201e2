@@ -13,6 +13,11 @@ interface TournamentCardProps {
 const TournamentCard = ({ tournament }: TournamentCardProps) => {
   const navigate = useNavigate();
   
+  // Extract location string from location object or use fallback
+  const locationDisplay = typeof tournament.location === 'string' 
+    ? tournament.location 
+    : tournament.location?.address || 'Location not specified';
+  
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="h-48 overflow-hidden">
@@ -46,7 +51,7 @@ const TournamentCard = ({ tournament }: TournamentCardProps) => {
           
           <div className="flex items-start">
             <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">{tournament.location}</p>
+            <p className="text-sm text-muted-foreground">{locationDisplay}</p>
           </div>
           
           <div className="flex items-start">

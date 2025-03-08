@@ -33,9 +33,14 @@ const Discover = () => {
 
   // Apply filters to tournaments
   const filteredTournaments = tournaments.filter(tournament => {
+    // Get the location string for filtering
+    const locationString = typeof tournament.location === 'string'
+      ? tournament.location
+      : tournament.location?.address || '';
+      
     // Filter by search term
     const matchesSearch = tournament.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          tournament.location.toLowerCase().includes(searchTerm.toLowerCase());
+                          locationString.toLowerCase().includes(searchTerm.toLowerCase());
     
     // Filter by sport
     const matchesSport = sportFilter === 'all' || tournament.sport === sportFilter;
