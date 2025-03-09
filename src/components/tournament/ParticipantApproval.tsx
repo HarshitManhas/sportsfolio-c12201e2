@@ -79,10 +79,13 @@ export const ParticipantApproval = ({
     
     setProcessingAction(true);
     try {
+      // Convert 'approve' to 'approved' and 'deny' to 'denied' to match the API requirements
+      const apiAction = action === 'approve' ? 'approved' : 'denied';
+      
       await updateRegistrationStatus(
         tournamentId,
         selectedParticipant.profile_id,
-        action,
+        apiAction,
         notes
       );
       
