@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "../components/Navigation";
-import FeaturedTournaments from "../components/FeaturedTournaments";
 import QuickAccess from "../components/QuickAccess";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,11 +45,6 @@ export default function Index() {
               Search
             </Button>
           </form>
-        </div>
-        
-        {/* Featured Tournaments */}
-        <div className="mb-10">
-          <FeaturedTournaments />
         </div>
         
         {/* Quick Access */}
