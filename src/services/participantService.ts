@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { uploadFile } from "./fileUpload";
 import { createNotification } from "./notificationService";
@@ -17,6 +18,23 @@ export const registerForTournament = async (
     }
     
     const userId = sessionData.session.user.id;
+    
+    // Check if the user has already registered for this tournament
+    const { data: existingRegistration, error: checkError } = await supabase
+      .from('tournament_participants')
+      .select('profile_id')
+      .eq('tournament_id', tournamentId)
+      .eq('profile_id', userId)
+      .maybeSingle();
+      
+    if (checkError) {
+      console.error("Error checking existing registration:", checkError);
+      throw checkError;
+    }
+    
+    if (existingRegistration) {
+      throw new Error("You have already registered for this tournament");
+    }
     
     // Upload payment screenshot if provided
     let paymentScreenshotUrl = undefined;
