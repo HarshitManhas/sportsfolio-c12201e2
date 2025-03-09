@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../components/Navigation";
@@ -8,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TournamentRegistration from "../components/TournamentRegistration";
 import { CalendarDays, MapPin, Clock, Users, Trophy, Clipboard, CreditCard, Share2 } from "lucide-react";
 import { Tournament } from "@/types/tournament";
-import { fetchTournamentById, fetchTournamentRegistrations } from "@/services/tournamentService";
+import { fetchTournamentById, fetchTournamentRegistrations } from "@/services/tournamentQueries"; // Updated import
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { ParticipantApproval } from "@/components/tournament/ParticipantApproval";

@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Tournament } from "@/types/tournament";
 
@@ -59,6 +58,29 @@ export const fetchTournamentById = async (id: string): Promise<Tournament> => {
     return processedData as Tournament;
   } catch (err) {
     console.error("Unexpected error:", err);
+    throw err;
+  }
+};
+
+// Add the missing function that was moved from tournamentService.ts
+export const fetchTournamentRegistrations = async (tournamentId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('tournament_participants')
+      .select(`
+        *,
+        profiles:profile_id(name, email)
+      `)
+      .eq('tournament_id', tournamentId);
+      
+    if (error) {
+      console.error("Error fetching tournament registrations:", error);
+      throw error;
+    }
+    
+    return data || [];
+  } catch (err) {
+    console.error("Error in fetchTournamentRegistrations:", err);
     throw err;
   }
 };

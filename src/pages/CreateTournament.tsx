@@ -18,7 +18,7 @@ import { TournamentFormData } from "@/types/tournament";
 import { BasicInfoTab } from "@/components/tournament/BasicInfoTab";
 import { DetailsTab } from "@/components/tournament/DetailsTab";
 import { PaymentTab } from "@/components/tournament/PaymentTab";
-import { createTournament } from "@/services/tournamentService";
+import { createTournament } from "@/services/tournamentCreation"; // Updated import
 import { supabase } from "@/integrations/supabase/client";
 
 const CreateTournament = () => {
