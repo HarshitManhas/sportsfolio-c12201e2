@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { uploadFile } from "./fileUpload";
 import { createNotification } from "./notificationService";
@@ -166,29 +165,6 @@ export const updateRegistrationStatus = async (
     return { success: true };
   } catch (err) {
     console.error("Error in updateRegistrationStatus:", err);
-    throw err;
-  }
-};
-
-// Fetch tournament registrations with status
-export const fetchTournamentRegistrations = async (tournamentId: string) => {
-  try {
-    const { data, error } = await supabase
-      .from('tournament_participants')
-      .select(`
-        *,
-        profiles:profile_id(name, email)
-      `)
-      .eq('tournament_id', tournamentId);
-      
-    if (error) {
-      console.error("Error fetching tournament registrations:", error);
-      throw error;
-    }
-    
-    return data || [];
-  } catch (err) {
-    console.error("Error in fetchTournamentRegistrations:", err);
     throw err;
   }
 };
