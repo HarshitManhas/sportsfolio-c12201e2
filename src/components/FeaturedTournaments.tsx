@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchTournaments } from "@/services/tournamentService";
+import { fetchTournaments } from "@/services";
 import { Tournament } from "@/types/tournament";
 
 export function FeaturedTournaments() {

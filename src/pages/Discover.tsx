@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Tournament } from "@/types/tournament";
 import TournamentFilters from "@/components/tournament/TournamentFilters";
 import TournamentsList from "@/components/tournament/TournamentsList";
-import { fetchTournaments } from "@/services/tournamentService";
+import { fetchTournaments } from "@/services";
 
 const Discover = () => {
   const navigate = useNavigate();

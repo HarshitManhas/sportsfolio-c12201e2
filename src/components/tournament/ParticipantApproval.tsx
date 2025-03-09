@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { 
   fetchPendingRegistrations, 
   updateRegistrationStatus 
-} from "@/services/tournamentService";
+} from "@/services";
 import { 
   Card, 
   CardContent, 

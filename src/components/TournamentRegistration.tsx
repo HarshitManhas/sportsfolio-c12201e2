@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { RegistrationStep, RegistrationFormData } from "./tournament/RegistrationStep";
 import { PaymentStep, PaymentFormData } from "./tournament/PaymentStep";
 import { ConfirmationStep } from "./tournament/ConfirmationStep";
-import { registerForTournament } from "@/services/tournamentService";
+import { registerForTournament } from "@/services";
 
 interface TournamentRegistrationProps {
   tournamentId: string;
