@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export type PaymentFormData = {
   transactionId: string;
@@ -48,9 +49,23 @@ export const PaymentStep = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error("File size exceeds 5MB limit");
+        return;
+      }
+      
       form.setValue("screenshot", file);
       setSelectedFileName(file.name);
     }
+  };
+
+  const handleSubmit = (data: PaymentFormData) => {
+    if (!data.screenshot && parseInt(entryFee) > 0) {
+      toast.error("Please upload a payment screenshot");
+      return;
+    }
+    
+    onSubmit(data);
   };
 
   return (
@@ -74,7 +89,7 @@ export const PaymentStep = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="transactionId"

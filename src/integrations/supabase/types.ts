@@ -193,19 +193,67 @@ export type Database = {
           },
         ]
       }
+      tournament_organizer_actions: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          notes: string | null
+          participant_id: string
+          tournament_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          participant_id: string
+          tournament_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+          participant_id?: string
+          tournament_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_organizer_actions_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tournament_organizer_actions_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tournament_participants: {
         Row: {
           joined_at: string | null
+          payment_details: Json | null
+          payment_status: string
           profile_id: string
           tournament_id: string
         }
         Insert: {
           joined_at?: string | null
+          payment_details?: Json | null
+          payment_status?: string
           profile_id: string
           tournament_id: string
         }
         Update: {
           joined_at?: string | null
+          payment_details?: Json | null
+          payment_status?: string
           profile_id?: string
           tournament_id?: string
         }

@@ -48,6 +48,7 @@ const TournamentRegistration = ({
     
     try {
       await registerForTournament(tournamentId, data);
+      toast.success("Free registration submitted! Your entry is pending approval.");
       setStep("confirmation");
     } catch (error: any) {
       toast.error(error.message || "Registration failed. Please try again.");
@@ -70,7 +71,7 @@ const TournamentRegistration = ({
         };
         
         await registerForTournament(tournamentId, combinedData, data.screenshot);
-        toast.success("Payment details submitted for verification!");
+        toast.success("Payment details submitted! Your entry is pending approval.");
         setStep("confirmation");
       }
     } catch (error: any) {

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navigation from "../components/Navigation";
@@ -9,14 +8,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TournamentRegistration from "../components/TournamentRegistration";
 import { CalendarDays, MapPin, Clock, Users, Trophy, Clipboard, CreditCard, Share2 } from "lucide-react";
 import { Tournament } from "@/types/tournament";
-import { fetchTournamentById } from "@/services/tournamentService";
+import { fetchTournamentById, fetchTournamentRegistrations } from "@/services/tournamentService";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/hooks/useAuth";
+import { ParticipantApproval } from "@/components/tournament/ParticipantApproval";
 
 const TournamentDetails = () => {
   const { id } = useParams<{ id: string }>();
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [registrations, setRegistrations] = useState<any[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const loadTournament = async () => {
@@ -26,6 +30,18 @@ const TournamentDetails = () => {
         setLoading(true);
         const data = await fetchTournamentById(id);
         setTournament(data);
+        
+        // Check if current user is the organizer
+        if (user) {
+          setIsOrganizer(data.organizer_id === user.id);
+          
+          // If user is organizer, load registrations
+          if (data.organizer_id === user.id) {
+            const regs = await fetchTournamentRegistrations(id);
+            setRegistrations(regs);
+          }
+        }
+        
         setError(null);
       } catch (err) {
         console.error("Failed to fetch tournament:", err);
@@ -36,7 +52,7 @@ const TournamentDetails = () => {
     };
 
     loadTournament();
-  }, [id]);
+  }, [id, user]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -143,11 +159,14 @@ const TournamentDetails = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Main content */}
             <div className="md:col-span-2 space-y-6">
-              <Tabs defaultValue="details">
-                <TabsList className="grid w-full grid-cols-3">
+              <Tabs defaultValue={isOrganizer ? "manage" : "details"}>
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="details">Details</TabsTrigger>
                   <TabsTrigger value="rules">Rules</TabsTrigger>
                   <TabsTrigger value="participants">Participants</TabsTrigger>
+                  {isOrganizer && (
+                    <TabsTrigger value="manage">Manage</TabsTrigger>
+                  )}
                 </TabsList>
                 
                 <TabsContent value="details" className="space-y-4">
@@ -236,6 +255,15 @@ const TournamentDetails = () => {
                     </CardContent>
                   </Card>
                 </TabsContent>
+                
+                {isOrganizer && (
+                  <TabsContent value="manage">
+                    <ParticipantApproval 
+                      tournamentId={tournament.id} 
+                      tournamentName={tournament.title} 
+                    />
+                  </TabsContent>
+                )}
               </Tabs>
             </div>
             
